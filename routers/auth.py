@@ -51,9 +51,9 @@ def authenticate_user(username: str, password: str, db: db_dependency):
 
 
 def create_access_token(
-    username: str, user_id: int, expires_delta: timedelta | None = None
+    username: str, user_id: int, role: str, expires_delta: timedelta | None = None
 ):
-    encode = {"sub": username, "id": user_id}
+    encode = {"sub": username, "id": user_id, "role": role}
     expires = datetime.now() + expires_delta
     encode.update({"exp": expires})
 
@@ -70,9 +70,10 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         payload = jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         user_id: str = payload.get("id")
+        user_role: str = payload.get("role")
         if username is None or user_id is None:
             raise credentials_exception
-        return {"username": username, "user_id": user_id}
+        return {"username": username, "user_id": user_id, "user_role": user_role}
     except JWTError:
         raise credentials_exception
 
@@ -107,5 +108,7 @@ def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    token = create_access_token(user.username, user.id, timedelta(minutes=20))
+    token = create_access_token(
+        user.username, user.id, user.role, timedelta(minutes=20)
+    )
     return {"access_token": token, "token_type": "bearer"}
