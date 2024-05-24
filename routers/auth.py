@@ -79,6 +79,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
+# db_dependency = Annotated[Session, Depends(get_db)]
 def create_user(create_user_request: CreateUserRequest, db: db_dependency):
     create_user_model = Users(
         username=create_user_request.username,
