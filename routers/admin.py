@@ -4,9 +4,9 @@ from fastapi import status
 from pydantic import BaseModel, Field
 
 
-from database import db_dependency
+from ..database import db_dependency
 from .auth import get_current_user
-import models
+from .. import models
 
 router = APIRouter(prefix="/admin/todo", tags=["admin"])
 user_dependency = Annotated[dict, Depends(get_current_user)]

@@ -2,12 +2,13 @@ from datetime import datetime, timedelta
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from models import Users
+
 from passlib.context import CryptContext
 from fastapi import status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt, JWTError
-from database import db_dependency
+from ..database import db_dependency
+from ..models import Users
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

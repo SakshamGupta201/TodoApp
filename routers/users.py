@@ -4,9 +4,9 @@ from fastapi import status
 from pydantic import BaseModel
 from .auth import get_password_hash
 
-from database import db_dependency
+from ..database import db_dependency
 from .auth import get_current_user
-import models
+from .. import models
 
 router = APIRouter(prefix="/users", tags=["users"])
 user_dependency = Annotated[dict, Depends(get_current_user)]

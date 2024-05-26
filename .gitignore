@@ -26,6 +26,4 @@ archive.zip
 .*.sw?
 .cache
 
-# macOS
-.DS_Store
 *.pyc
