@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Union
 from fastapi import Depends, HTTPException, APIRouter
 from fastapi import status
 from pydantic import BaseModel
@@ -18,6 +18,7 @@ class UserResponse(BaseModel):
     role: str
     last_name: str
     username: str
+    phone_number: Union[str, None]
 
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=UserResponse)
@@ -36,3 +37,17 @@ def update_password(user: user_dependency, db: db_dependency, new_password: str)
     user.hashed_password = hashed_password
     db.commit()
     db.refresh(user)
+
+
+@router.put(
+    "/update_phone_number", status_code=status.HTTP_200_OK, response_model=UserResponse
+)
+def update_phone_number(user: user_dependency, db: db_dependency, phone_number: str):
+    if user:
+        user_db = db.query(models.Users).first()
+        user_db.phone_number = phone_number
+        db.commit()
+        db.refresh(user_db)
+        return user_db
+    else:
+        raise HTTPException(status_code=401, detail="Authentication Failed")

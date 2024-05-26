@@ -24,6 +24,7 @@ class CreateUserRequest(BaseModel):
     email: str
     first_name: str
     last_name: str
+    phone_number: str
     password: str
     role: str
 
@@ -87,6 +88,7 @@ def create_user(create_user_request: CreateUserRequest, db: db_dependency):
         first_name=create_user_request.first_name,
         last_name=create_user_request.last_name,
         role=create_user_request.role,
+        phone_number=create_user_request.phone_number,
         hashed_password=get_password_hash(create_user_request.password),
         is_active=True,
     )
